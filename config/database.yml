@@ -13,6 +13,8 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  host: localhost
+  port: 5432
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -80,5 +82,5 @@ production:
   <<: *default
   database: african_queen_kitchen_production
   username: african_queen_kitchen
-  password: <%= ENV["FISHING_SPOT_FINDER_DATABASE_PASSWORD"] %>
+  password: <%= ENV["AFRICAN_QUEEN_KITCHEN_PASSWORD"] %>
 
