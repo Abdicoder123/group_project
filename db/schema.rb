@@ -13,6 +13,11 @@
 ActiveRecord::Schema[7.2].define(version: 2025_01_15_170125) do
   create_table "menus", force: :cascade do |t|
     t.string "name"
+    t.string "title"
+    t.text "description"
+    t.string "category"
+    t.boolean "active", default: true
+    t.text "special_notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
