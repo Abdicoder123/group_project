@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.2].define(version: 2025_01_15_170125) do
   create_table "menus", force: :cascade do |t|
-    t.string "name"
     t.string "title"
     t.text "description"
     t.string "category"
