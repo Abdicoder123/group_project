@@ -1,0 +1,19 @@
+.cards {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+  }
+
+.card {
+    border: none;
+    padding: 1rem;
+    border-radius:0px !important;
+}
+
+.info-card {
+    align-self: center;
+}
+
+@media (min-width: 600px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+  }
