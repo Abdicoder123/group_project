@@ -8,6 +8,7 @@ on:
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -53,45 +54,44 @@ jobs:
         run: bin/rubocop -f github
 
   test:
-    runs-on: ubuntu-latest
+  runs-on: ubuntu-latest
 
-    services:
-      postgresql:
-        image: postgres:14  # Ensure you're using the PostgreSQL version you need
-        options: --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 5
-        env:
-          POSTGRES_DB: african_queen_kitchen_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+  services:
+    postgresql:
+      image: postgres:14  # Use the version of PostgreSQL you need
+      options: --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 5
+      env:
+        POSTGRES_DB: african_queen_kitchen_test
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
 
-    steps:
-      steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql postgresql-contrib
+  steps:
+    - name: Install packages
+      run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql postgresql-contrib
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+        bundler-cache: true
 
-      - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:5432/african_queen_kitchen_test
-        run: |
-          bin/rails db:migrate
-          bin/rails db:test:prepare
-          bin/rails test
+    - name: Run tests
+      env:
+        RAILS_ENV: test
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/african_queen_kitchen_test  # Adjust according to your environment
+      run: |
+        bin/rails db:create
+        bin/rails db:migrate
+        bin/rails db:test:prepare
+        bin/rails test
 
-
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
+    - name: Keep screenshots from failed system tests
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: screenshots
+        path: ${{ github.workspace }}/tmp/screenshots
+        if-no-files-found: ignore
