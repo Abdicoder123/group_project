@@ -74,21 +74,6 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..20}; do
-            if pg_isready -h localhost -p 5432 -U postgres; then
-              echo "PostgreSQL is ready";
-              exit 0;
-            fi
-            echo "Waiting for PostgreSQL...";
-            sleep 3;
-          done;
-          echo "PostgreSQL did not become ready in time!";
-          exit 1;
-        env:
-          PGPASSWORD: postgres
-
       - name: Test PostgreSQL connection
         run: |
           psql -h localhost -U postgres -d african_queen_kitchen_test -c "\l"
