@@ -65,6 +65,10 @@ jobs:
           POSTGRES_PASSWORD: postgres
 
     steps:
+      steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql postgresql-contrib
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -74,16 +78,10 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Test PostgreSQL connection
-        run: |
-          psql -h localhost -U postgres -d african_queen_kitchen_test -c "\l"
-        env:
-          PGPASSWORD: postgres
-
       - name: Run tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/african_queen_kitchen_test
+          DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:5432/african_queen_kitchen_test
         run: |
           bin/rails db:migrate
           bin/rails db:test:prepare
