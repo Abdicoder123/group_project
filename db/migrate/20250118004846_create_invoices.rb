@@ -1,6 +1,7 @@
 class CreateInvoices < ActiveRecord::Migration[7.2]
   def change
     create_table :invoices do |t|
+      t.references :order_id
       t.date :invoice_date
       t.date :due_date
       t.decimal :total_amount
